@@ -41,27 +41,28 @@
                                   <th>Identification</th>
                                   <th>Title</th>
                                   <th>Status</th>
-                                  <th>Borrow date</th>
-                                  <th>Payment date</th>
-                                  <th class="col-1">Status</th>
+                                  <th>Borrow day</th>
+                                  <th>Payment day</th>
+                                  <th >Imperative Day</th>
                                   <th class="col-1 text-center">Editing</th>
                                   <th class="col-1 text-center">Delete</th>
                                 </tr>
                               </thead>
                               <tbody>
+                              <%int stt=1; %>
                                     <c:forEach var="ticket" items="${ticketList}">
                                         <tr>
-                                            <td><c:out value="${bookList.indexOf(book) + 1}" /></td>
-                                            <td><c:out value="${ticket.book.nameBook}" /></td>
+                                            <td><%=stt++%></td>
                                             <td><c:out value="${ticket.reader.nameReader}" /></td>
+                                            <td><c:out value="${ticket.reader.identity}" /></td>
+                                            <td><c:out value="${ticket.book.nameBook}" /></td>
                                             <td><c:out value="${ticket.status}" /></td>
                                             <td><c:out value="${ticket.rentDay}" /></td>
                                             <td><c:out value="${ticket.returnDay}" /></td>
                                             <td><c:out value="${ticket.imperativeReturnDay}" /></td>
+                                            
                                             <td>
-                                                <a href="EditTicket?idTicket=${ticket.idTicket}&idTicket=${ticket.idTicket}">
-                                                    <i class="fa-solid fa-pen-to-square"></i>
-                                                </a>
+                                                <a href="EditTicket?idTicket=${ticket.idTicket}&id=${ticket.idTicket}"><i class="fa-solid fa-pen-to-square"></i></a>
                                             </td>
                                             <td>
                                                 <a href="DeleteTicket?idTicket=${ticket.idTicket}&idTicket=${ticket.idTicket}">

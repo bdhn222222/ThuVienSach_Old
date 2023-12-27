@@ -20,7 +20,7 @@ public class TicketBO {
         return ticketDAO.searchTicketsByReaderName(readerNameSearch);
     }
 
-    public List<Ticket> findTicket(Integer idTicket) throws ClassNotFoundException, SQLException {
+    public Ticket findTicket(Integer idTicket) throws ClassNotFoundException, SQLException {
         return ticketDAO.findTicket(idTicket);
     }
 

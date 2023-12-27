@@ -124,7 +124,7 @@ public class TicketDAO {
 	    
 	    return tickets;
 	}
-	public List<Ticket> findTicket(Integer idTicket) throws ClassNotFoundException, SQLException {
+	public Ticket findTicket(Integer idTicket) throws ClassNotFoundException, SQLException {
 	    if(conn == null)
 	        conn = ConnectDatabase.getMySQLConnection();
 	    
@@ -133,7 +133,6 @@ public class TicketDAO {
 	    pstm.setInt(1, idTicket);
 	    ResultSet rs = pstm.executeQuery();
 	    
-	    List<Ticket> tickets = new ArrayList<>();
 	    
 	    while(rs.next()) {
 	        Integer idTicket1 = rs.getInt("idTicket");
@@ -164,10 +163,10 @@ public class TicketDAO {
 	        ticket.setRentDay(rentday);
 	        ticket.setReturnDay(returnday);
 	        ticket.setImperativeReturnDay(imperativeReturnDay);
-	        tickets.add(ticket);
+	        return ticket;
 	    }
 	    
-	    return tickets;
+	    return null;
 	}
 	public int insertTicket(Ticket ticket) throws ClassNotFoundException, SQLException{
 		if(conn == null)
@@ -189,12 +188,12 @@ public class TicketDAO {
 	    if (conn == null)
 	        conn = ConnectDatabase.getMySQLConnection();
 
-	    String sql = "SELECT * FROM Ticket";
+	    String sql = "SELECT * FROM ticket";
 	    PreparedStatement pstm = conn.prepareStatement(sql);
 	    ResultSet rs = pstm.executeQuery();
 
 	    while (rs.next()) {
-	    	
+	    	Integer idTicket = rs.getInt("idTicket");
 	        Integer idBook = rs.getInt("idBook");
 	        Integer idReader = rs.getInt("idReader");
 	        String status = rs.getString("status");
@@ -216,6 +215,7 @@ public class TicketDAO {
 				e1.printStackTrace();
 			}
 	        Ticket ticket = new Ticket();
+	        ticket.setIdTicket(idTicket);
 	        ticket.setBook(book);
 	        ticket.setReader(reader);
 	        ticket.setStatus(status);
@@ -369,7 +369,12 @@ public int updateStatus0(String idTicket) throws SQLException, ClassNotFoundExce
 	        conn.setAutoCommit(true);
 	    }
 	}
-
+	public static void main(String[] args) throws ClassNotFoundException, SQLException {
+		TicketDAO ticketDAO = new TicketDAO();
+		ticketDAO.findTicket(2);
+		System.out.println(ticketDAO);
+	}
+	
 
 }
 
