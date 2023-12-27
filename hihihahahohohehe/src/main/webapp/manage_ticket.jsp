@@ -55,9 +55,9 @@
                                             <td><c:out value="${ticket.book.nameBook}" /></td>
                                             <td><c:out value="${ticket.reader.nameReader}" /></td>
                                             <td><c:out value="${ticket.status}" /></td>
-                                            <td><c:out value="${ticket.rentday}" /></td>
-                                            <td><c:out value="${ticket.returnday}" /></td>
-                                            <td><c:out value="${ticket.imperativeday}" /></td>
+                                            <td><c:out value="${ticket.rentDay}" /></td>
+                                            <td><c:out value="${ticket.returnDay}" /></td>
+                                            <td><c:out value="${ticket.imperativeReturnDay}" /></td>
                                             <td>
                                                 <a href="EditTicket?idTicket=${ticket.idTicket}&idTicket=${ticket.idTicket}">
                                                     <i class="fa-solid fa-pen-to-square"></i>

@@ -57,6 +57,7 @@ public class AddTicketServlet extends HttpServlet {
         String rentday = request.getParameter("rentday");
         String returnday = request.getParameter("returnday");
         String imreturnday = request.getParameter("imreturnday");
+        System.out.print(rentday);
 
         if (status == null || (!status.equals("0") && !status.equals("1"))) {
             request.setAttribute("errorMessage", "Invalid status value.");
@@ -75,20 +76,10 @@ public class AddTicketServlet extends HttpServlet {
             ticket.setReader(reader);
             ticket.setBook(book);
             ticket.setStatus(status);
-            
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-            java.util.Date parsedRentDay = dateFormat.parse(rentday);
-            java.util.Date parsedReturnDay = dateFormat.parse(returnday);
-            java.util.Date parsedImReturnDay = dateFormat.parse(imreturnday);
-            
-            String rentDateAsString = dateFormat.format(parsedRentDay);
-            String returnDateAsString = dateFormat.format(parsedReturnDay);
-            String imReturnDateAsString = dateFormat.format(parsedImReturnDay);
-
-            ticket.setRentDay(rentDateAsString);
-            ticket.setReturnDay(returnDateAsString);
-            ticket.setImperativeReturnDay(imReturnDateAsString);
+            ticket.setRentDay(rentday);
+            ticket.setReturnDay(returnday);
+            ticket.setImperativeReturnDay(imreturnday);
 
             int result = ticketBO.insertTicket(ticket);
             if (result > 0) {
@@ -97,7 +88,7 @@ public class AddTicketServlet extends HttpServlet {
             } else {
                 request.setAttribute("errorMessage", "Failed to add a ticket.");
             }
-        } catch (NumberFormatException | ClassNotFoundException | SQLException | ParseException e) {
+        } catch (NumberFormatException | ClassNotFoundException | SQLException e) {
             e.printStackTrace();
             request.setAttribute("errorMessage", e.getMessage());
         }

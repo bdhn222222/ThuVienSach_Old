@@ -34,16 +34,7 @@ public class TicketDAO {
 	CategoryBO categoryBO = new CategoryBO();
 	BookShelfBO bookShelfBO = new BookShelfBO();
 	ReaderBO readerBO = new ReaderBO();
-	public java.sql.Date convertStringToSqlDate(String dateString) {
-	    try {
-	        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
-	        java.util.Date parsedDate = dateFormat.parse(dateString);
-	        return new java.sql.Date(parsedDate.getTime());
-	    } catch (ParseException e) {
-	        e.printStackTrace();
-	        return null; 
-	    }
-	}
+	
 
 	public List<Ticket> searchTicketsByBookName(String bookNameSearch) throws ClassNotFoundException, SQLException {
 	    if(conn == null)
@@ -59,15 +50,10 @@ public class TicketDAO {
 	        Integer idTicket = rs.getInt("idTicket");
 	        Integer idBook = rs.getInt("idBook");
 	        Integer idReader = rs.getInt("idReader");
-	        SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yy");
-	        Timestamp returnDay = rs.getTimestamp("returnDay");
-	        String strReturnDay = (returnDay != null) ? dateTimeFormat.format(returnDay) : null;
-	        Timestamp rentDay = rs.getTimestamp("rentDay");
-	        String strRentDay = (rentDay != null) ? dateTimeFormat.format(rentDay) : null;
-	        Timestamp imRentDay = rs.getTimestamp("imRentDay");
-	        String strImRentDay = (imRentDay != null) ? dateTimeFormat.format(imRentDay) : null;
-
 	        String status = rs.getString("status");
+	        String rentday = rs.getString("rentday");
+	        String returnday = rs.getString("returnday");
+	        String imperativeReturnDay = rs.getString("imperativeReturnDay");
 	        Book book = null;
 	        try {
 	            book = bookBO.findBook(idBook);
@@ -85,9 +71,9 @@ public class TicketDAO {
 	        ticket.setBook(book);
 	        ticket.setReader(reader);
 	        ticket.setStatus(status);
-	        ticket.setRentDay(strRentDay);
-	        ticket.setReturnDay(strReturnDay);
-	        ticket.setImperativeReturnDay(strImRentDay);
+	        ticket.setRentDay(rentday);
+	        ticket.setReturnDay(returnday);
+	        ticket.setImperativeReturnDay(imperativeReturnDay);
 	        tickets.add(ticket);
 	    }
 	    
@@ -106,18 +92,13 @@ public class TicketDAO {
 	    List<Ticket> tickets = new ArrayList<>();
 	    
 	    while(rs.next()) {
-	        Integer idTicket = rs.getInt("idTicket");
+	    	Integer idTicket1 = rs.getInt("idTicket");
 	        Integer idBook = rs.getInt("idBook");
 	        Integer idReader = rs.getInt("idReader");
-	        SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yy");
-	        Timestamp returnDay = rs.getTimestamp("returnDay");
-	        String strReturnDay = (returnDay != null) ? dateTimeFormat.format(returnDay) : null;
-	        Timestamp rentDay = rs.getTimestamp("rentDay");
-	        String strRentDay = (rentDay != null) ? dateTimeFormat.format(rentDay) : null;
-	        Timestamp imRentDay = rs.getTimestamp("imRentDay");
-	        String strImRentDay = (imRentDay != null) ? dateTimeFormat.format(imRentDay) : null;
-
 	        String status = rs.getString("status");
+	        String rentday = rs.getString("rentday");
+	        String returnday = rs.getString("returnday");
+	        String imperativeReturnDay = rs.getString("imperativeReturnDay");
 	        Book book = null;
 	        try {
 	            book = bookBO.findBook(idBook);
@@ -131,13 +112,13 @@ public class TicketDAO {
 	            e.printStackTrace();
 	        }
 	        Ticket ticket = new Ticket();
-	        ticket.setIdTicket(idTicket);
+	        ticket.setIdTicket(idTicket1);
 	        ticket.setBook(book);
 	        ticket.setReader(reader);
 	        ticket.setStatus(status);
-	        ticket.setRentDay(strRentDay);
-	        ticket.setReturnDay(strReturnDay);
-	        ticket.setImperativeReturnDay(strImRentDay);
+	        ticket.setRentDay(rentday);
+	        ticket.setReturnDay(returnday);
+	        ticket.setImperativeReturnDay(imperativeReturnDay);
 	        tickets.add(ticket);
 	    }
 	    
@@ -158,15 +139,11 @@ public class TicketDAO {
 	        Integer idTicket1 = rs.getInt("idTicket");
 	        Integer idBook = rs.getInt("idBook");
 	        Integer idReader = rs.getInt("idReader");
-	        SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yy");
-	        Timestamp returnDay = rs.getTimestamp("returnDay");
-	        String strReturnDay = (returnDay != null) ? dateTimeFormat.format(returnDay) : null;
-	        Timestamp rentDay = rs.getTimestamp("rentDay");
-	        String strRentDay = (rentDay != null) ? dateTimeFormat.format(rentDay) : null;
-	        Timestamp imRentDay = rs.getTimestamp("imRentDay");
-	        String strImRentDay = (imRentDay != null) ? dateTimeFormat.format(imRentDay) : null;
-
 	        String status = rs.getString("status");
+	        String rentday = rs.getString("rentday");
+	        String returnday = rs.getString("returnday");
+	        String imperativeReturnDay = rs.getString("imperativeReturnDay");
+
 	        Book book = null;
 	        try {
 	            book = bookBO.findBook(idBook);
@@ -184,9 +161,9 @@ public class TicketDAO {
 	        ticket.setBook(book);
 	        ticket.setReader(reader);
 	        ticket.setStatus(status);
-	        ticket.setRentDay(strRentDay);
-	        ticket.setReturnDay(strReturnDay);
-	        ticket.setImperativeReturnDay(strImRentDay);
+	        ticket.setRentDay(rentday);
+	        ticket.setReturnDay(returnday);
+	        ticket.setImperativeReturnDay(imperativeReturnDay);
 	        tickets.add(ticket);
 	    }
 	    
@@ -201,9 +178,9 @@ public class TicketDAO {
 		pstm.setInt(1, ticket.getBook().getIdBook());
 		pstm.setInt(2, ticket.getReader().getIdReader());
 		pstm.setString(3, ticket.getStatus());
-		pstm.setDate(4, convertStringToSqlDate(ticket.getReturnDay())); 
-	    pstm.setDate(5, convertStringToSqlDate(ticket.getRentDay()));
-	    pstm.setDate(6, convertStringToSqlDate(ticket.getImperativeReturnDay()));
+		pstm.setString(4, ticket.getReturnDay()); 
+	    pstm.setString(5, ticket.getRentDay());
+	    pstm.setString(6, ticket.getImperativeReturnDay());
 	    result = pstm.executeUpdate();
 		return result;
 	}
@@ -221,13 +198,9 @@ public class TicketDAO {
 	        Integer idBook = rs.getInt("idBook");
 	        Integer idReader = rs.getInt("idReader");
 	        String status = rs.getString("status");
-	        Date rentDay = rs.getDate("rentDay");
-	        Date returnDay = rs.getDate("returnDay");
-	        Date imperativeReturnDay = rs.getDate("imperativeReturnDay");
-	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	        String strRentDay = dateFormat.format(rentDay);
-	        String strReturnDay = dateFormat.format(returnDay);
-	        String strImperativeReturnDay = dateFormat.format(imperativeReturnDay);
+	        String rentday = rs.getString("rentday");
+	        String returnday = rs.getString("returnday");
+	        String imperativeReturnDay = rs.getString("imperativeReturnDay");
 	        Book book = new Book();
 			try {
 				book = bookBO.findBook(idBook);
@@ -246,9 +219,9 @@ public class TicketDAO {
 	        ticket.setBook(book);
 	        ticket.setReader(reader);
 	        ticket.setStatus(status);
-	        ticket.setRentDay(strRentDay);
-	        ticket.setReturnDay(strReturnDay);
-	        ticket.setImperativeReturnDay(strImperativeReturnDay);
+	        ticket.setRentDay(rentday);
+	        ticket.setReturnDay(returnday);
+	        ticket.setImperativeReturnDay(imperativeReturnDay);
 
 	        list.add(ticket);
 	    }
@@ -262,9 +235,9 @@ public class TicketDAO {
 	    PreparedStatement pstm = conn.prepareStatement(sql);
 	    pstm.setInt(1, ticket.getBook().getIdBook());
 	    pstm.setInt(2, ticket.getReader().getIdReader());
-	    pstm.setDate(3, convertStringToSqlDate(ticket.getReturnDay()));
-	    pstm.setDate(4, convertStringToSqlDate(ticket.getRentDay()));
-	    pstm.setDate(5, convertStringToSqlDate(ticket.getImperativeReturnDay()));
+	    pstm.setString(3, ticket.getReturnDay());
+	    pstm.setString(4, ticket.getRentDay());
+	    pstm.setString(5, ticket.getImperativeReturnDay());
 	    pstm.setString(6, ticket.getStatus());
 	    pstm.setInt(7, ticket.getIdTicket());
 
