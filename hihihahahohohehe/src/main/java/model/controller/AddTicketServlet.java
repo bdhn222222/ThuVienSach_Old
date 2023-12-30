@@ -13,10 +13,11 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import jakarta.servlet.http.HttpSession;
 import model.bean.Book;
 import model.bean.Reader;
 import model.bean.Ticket;
+import model.bean.User;
 import model.bo.BookBO;
 import model.bo.ReaderBO;
 import model.bo.TicketBO;
@@ -29,9 +30,17 @@ public class AddTicketServlet extends HttpServlet {
     private TicketBO ticketBO = new TicketBO();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String errorString = null;
         ArrayList<Book> bookList = null;
         ArrayList<Reader> readerList = null;
+        String errorString = null;
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("userSession");
+		if (user == null) {
+			errorString = "You need login first!";
+			request.setAttribute("errorString", errorString);
+			RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher("/login.jsp");
+			dispatcher.forward(request, response);
+		} else {
         try {
             readerList = readerBO.getAllReader();
             bookList = bookBO.getAllBook();
@@ -47,7 +56,7 @@ public class AddTicketServlet extends HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher("add_ticket.jsp");
         dispatcher.forward(request, response);
     }
-
+}
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
 

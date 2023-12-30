@@ -10,8 +10,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import jakarta.servlet.http.HttpSession;
 import model.bean.Reader;
+import model.bean.User;
 import model.bo.ReaderBO;
 
 /**
@@ -42,9 +43,17 @@ public class ManageReaderServlet extends HttpServlet {
 			RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher("/login.jsp");
 			dispatcher.forward(request, response);
 		} else {*/
-			String errorString = null;
+			
 			ArrayList<Reader> list = null;
-
+			String errorString = null;
+			HttpSession session = request.getSession();
+			User user = (User) session.getAttribute("userSession");
+			if (user == null) {
+				errorString = "Bạn cần đăng nhập trước";
+				request.setAttribute("errorString", errorString);
+				RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher("/login.jsp");
+				dispatcher.forward(request, response);
+			} else {
 			try {
 				list = ReaderBO.getAllReader();
 			} catch (Exception e) {
@@ -62,27 +71,11 @@ public class ManageReaderServlet extends HttpServlet {
 			RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher("/manage_reader.jsp");
 			dispatcher.forward(request, response);
 		}
-	//}
+	}	//}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 	        throws ServletException, IOException {
-	    String nameReader = request.getParameter("nameReader");
-	    String identity = request.getParameter("identity"); // Lưu ý tên tham số
-	    String telReader = request.getParameter("telReader");
-
-	    Reader reader = new Reader();
-	    reader.setNameReader(nameReader);
-	    reader.setIdentity(identity); // Đặt giá trị cho thuộc tính identity
-	    reader.setTelReader(telReader);
-
-	    ReaderBO readerBO = new ReaderBO();
-	    try {
-	        readerBO.insertReader(reader); // Thêm người đọc mới
-	        response.sendRedirect(request.getContextPath() + "/ManageReader"); // Chuyển hướng về trang quản lý người đọc
-	    } catch (SQLException | ClassNotFoundException e) {
-	        e.printStackTrace();
-	        response.getWriter().println("An error occurred while processing your request.");
-	    }
+		doGet(request, response);
 	}
 
 

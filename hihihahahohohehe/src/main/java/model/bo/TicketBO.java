@@ -36,9 +36,13 @@ public class TicketBO {
         return ticketDAO.updateTicket(ticket);
     }
 
-    public int deleteTicket(int idTicket) throws ClassNotFoundException, SQLException {
-        return ticketDAO.deleteTicket(idTicket);
-    }
+    public boolean deleteTicket (Integer ticket) throws SQLException, ClassNotFoundException{
+		int result = ticketDAO.deleteTicket(ticket);
+		if (result != 0)
+			return true;
+		return false;
+		
+	}
 
     public int deleteAllTicket() throws ClassNotFoundException, SQLException {
         return ticketDAO.deleteAllTicket();

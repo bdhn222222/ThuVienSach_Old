@@ -6,12 +6,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.bean.Authors;
 import model.bean.Book;
 import model.bean.BookShelf;
 import model.bean.Category;
 import model.bean.Reader;
 import model.bean.Ticket;
+import model.bean.User;
 import model.bo.AuthorsBO;
 import model.bo.BookBO;
 import model.bo.CategoryBO;
@@ -46,9 +48,17 @@ public class EditTicketServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		String errorString = null;
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("userSession");
+		if (user == null) {
+			errorString = "You need login first!";
+			request.setAttribute("errorString", errorString);
+			RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher("/login.jsp");
+			dispatcher.forward(request, response);
+		} else {
 		String idTicket = request.getParameter("idTicket");
 		System.out.print(idTicket);
-		String errorString = null;
 		List<Reader> readerList = null;
         List<Book> bookList = null; 
         ArrayList<Ticket> ticketList = null;
@@ -84,7 +94,7 @@ public class EditTicketServlet extends HttpServlet {
             }
         }
 	}
-
+	}
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */

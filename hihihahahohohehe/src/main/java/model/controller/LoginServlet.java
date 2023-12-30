@@ -1,23 +1,23 @@
 package model.controller;
 
-
-
-import java.io.IOException;
-import java.sql.SQLException;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.bo.UserBO;
+
+import java.io.IOException;
+import java.sql.SQLException;
+
 
 import model.bean.User;
-import model.bo.UserBO;
 
 /**
  * Servlet implementation class LoginServlet
  */
+
 @WebServlet("/Login")
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -35,16 +35,16 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String userName = request.getParameter("userName");
+		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-		System.out.println(userName + " " + password);
+		System.out.println(username + " " + password);
 		UserBO userBO = new UserBO();
 //		String errorMessage = "";
 		
 		try {
-			User user = userBO.getAccount(userName, password);
-			System.out.println(userName + " " + password);
-			System.out.println("from LoginServlet " + user);
+			User user = userBO.getAccount(username, password);
+			System.out.println(username + " " + password);
+			System.out.println("from Login " + user);
 			if(user == null) {
 				request.setAttribute("errorMessage", "*Your username/password is invalid!");
 				request.getRequestDispatcher("login.jsp").forward(request, response);
@@ -52,7 +52,7 @@ public class LoginServlet extends HttpServlet {
 				HttpSession session = request.getSession();
 				session.setAttribute("userSession", user);
 				session.setAttribute("loginSession", true);
-				response.sendRedirect("HomePage.jsp");
+				response.sendRedirect("home.jsp");
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

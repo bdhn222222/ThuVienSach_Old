@@ -4,6 +4,7 @@ import model.bean.Authors;
 import model.bean.Book;
 import model.bean.BookShelf;
 import model.bean.Category;
+import model.bean.User;
 import model.bo.AuthorsBO;
 import model.bo.BookBO;
 import model.bo.BookShelfBO;
@@ -19,6 +20,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class ManageBookServlet
@@ -44,6 +46,14 @@ public class ManageBookServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String errorString = null;
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("userSession");
+		if (user == null) {
+			errorString = "Bạn cần đăng nhập trước";
+			request.setAttribute("errorString", errorString);
+			RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher("/login.jsp");
+			dispatcher.forward(request, response);
+		} else {
         List<Category> categoryList = null;
         List<BookShelf> bookShelfList = null;
         List<Authors> authorsList = null;
@@ -74,7 +84,7 @@ public class ManageBookServlet extends HttpServlet {
         RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher("/manage_book.jsp");
         dispatcher.forward(request, response);
     }
-
+}
     /**
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */

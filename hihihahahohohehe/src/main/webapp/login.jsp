@@ -25,16 +25,20 @@
 				    <div class="col-md-6">
 				      <div class="card card-primary bg-dark text-light">
 				        <div class="card-header">
-				          <h3 class="card-title">Đăng nhập</h3>
+				          <h3 class="card-title">Login</h3>
 				        </div>
 				        <div class="card-body">
-				          <form role="form" action="${pageContext.request.contextPath}/Login" method="post">
+				          <form role="form" action="Login" method="post">
+				          <div
+									class="d-flex flex-row justify-content-md-around align-items-center">
+									<p class="text-danger">${errorMessage}</p>
+								</div>
 				            <div class="form-group">
-				              <label for="exampleInputEmail1">Tên đăng nhập</label>
+				              <label for="exampleInputEmail1">Username</label>
 				              <input type="text" class="form-control" name="username" placeholder="Tên tài khoản" required="required">
 				            </div>
 				            <div class="form-group">
-				              <label for="exampleInputPassword1">Mật khẩu</label>
+				              <label for="exampleInputPassword1">Password</label>
 				              <input type="password" class="form-control" name="password" placeholder="Mật khẩu" required="required">
 				            </div>
 				            <div class="form-check">
@@ -45,7 +49,7 @@
 				              <small><b>Note:</b> Username: <b>sa</b>, Password: <b>123456</b></small>
 				            </div>-->
 				            <div class="d-grid gap-2">
-				            	<input type="button" value="Đăng nhập" class="btn btn-primary mt-1" onclick="location.href='home.jsp'">
+				            	<input type="submit" value="login" class="btn btn-primary mt-1" onclick="location.href='home.jsp'">
 				            </div>
 				          </form>
 				        </div>

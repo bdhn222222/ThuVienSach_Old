@@ -3,12 +3,14 @@ package model.controller;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import jakarta.servlet.http.HttpSession;
+import model.bean.User;
 import model.bo.CategoryBO;
 
 
@@ -35,6 +37,15 @@ public class DeleteCategoryServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		String errorString = null;
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("userSession");
+		if (user == null) {
+			errorString = "You need login first!";
+			request.setAttribute("errorString", errorString);
+			RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher("/login.jsp");
+			dispatcher.forward(request, response);
+		} else {
 		int idCategory = Integer.parseInt(request.getParameter("idCategory"));
 		boolean result;
 		try {
@@ -54,7 +65,8 @@ public class DeleteCategoryServlet extends HttpServlet {
 //		RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher("/ManageCategory");
 //		dispatcher.forward(request, response);
 		response.sendRedirect("ManageCategory");
-	}
+		}
+}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse

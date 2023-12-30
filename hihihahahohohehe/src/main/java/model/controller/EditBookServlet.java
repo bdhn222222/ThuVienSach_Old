@@ -11,10 +11,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.bean.Authors;
 import model.bean.Book;
 import model.bean.BookShelf;
 import model.bean.Category;
+import model.bean.User;
 import model.bo.AuthorsBO;
 import model.bo.BookBO;
 import model.bo.BookShelfBO;
@@ -29,47 +31,55 @@ public class EditBookServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String idBook = request.getParameter("idBook");
-        String errorString = null;
-        List<Category> categoryList = null;
-        List<BookShelf> bookShelfList = null;
-        List<Authors> authorsList = null;
-        ArrayList<Book> list = null;
+    	String errorString = null;
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("userSession");
+		if (user == null) {
+			errorString = "You need login first!";
+			request.setAttribute("errorString", errorString);
+			RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher("/login.jsp");
+			dispatcher.forward(request, response);
+		} else {
+			String idBook = request.getParameter("idBook");
+	        List<Category> categoryList = null;
+	        List<BookShelf> bookShelfList = null;
+	        List<Authors> authorsList = null;
+	        ArrayList<Book> list = null;
 
-        if (idBook != null && !idBook.isEmpty()) {
-            try {
-                Integer bookID = Integer.parseInt(idBook);
-                Book book = bookBO.findBook(bookID);
-                list = bookBO.getAllBook();
-                categoryList = categoryBO.list();
-                bookShelfList = bookshelfBO.getAllBookShelf();
-                authorsList = authorsBO.list();
-
-                if (book != null) {
-                    request.setAttribute("book", book);
-                    request.setAttribute("errorString", errorString);
-                    request.setAttribute("categoryList", categoryList);
-                    request.setAttribute("bookShelfList", bookShelfList);
-                    request.setAttribute("authorsList", authorsList);
-                    request.setAttribute("bookList", list);
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("/edit_book.jsp");
-                    dispatcher.forward(request, response);
-                } else {
-                    errorString = "Book not found!";
-                    request.setAttribute("errorString", errorString);
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
-                    dispatcher.forward(request, response);
-                }
-            } catch (NumberFormatException | ClassNotFoundException | SQLException e) {
-                e.printStackTrace();
-                errorString = "An error occurred while processing your request.";
-                request.setAttribute("errorString", errorString);
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
-                dispatcher.forward(request, response);
+	        if (idBook != null && !idBook.isEmpty()) {
+	            try {
+	                Integer bookID = Integer.parseInt(idBook);
+	                Book book = bookBO.findBook(bookID);
+	                list = bookBO.getAllBook();
+	                categoryList = categoryBO.list();
+	                bookShelfList = bookshelfBO.getAllBookShelf();
+	                authorsList = authorsBO.list();
+	
+	                if (book != null) {
+	                    request.setAttribute("book", book);
+	                    request.setAttribute("errorString", errorString);
+	                    request.setAttribute("categoryList", categoryList);
+	                    request.setAttribute("bookShelfList", bookShelfList);
+	                    request.setAttribute("authorsList", authorsList);
+	                    request.setAttribute("bookList", list);
+	                    RequestDispatcher dispatcher = request.getRequestDispatcher("/edit_book.jsp");
+	                    dispatcher.forward(request, response);
+	                } else {
+	                    errorString = "Book not found!";
+	                    request.setAttribute("errorString", errorString);
+	                    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+	                    dispatcher.forward(request, response);
+	                }
+	            } catch (NumberFormatException | ClassNotFoundException | SQLException e) {
+	                e.printStackTrace();
+	                errorString = "An error occurred while processing your request.";
+	                request.setAttribute("errorString", errorString);
+	                RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+	                dispatcher.forward(request, response);
             }
         }
     }
-
+}
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");

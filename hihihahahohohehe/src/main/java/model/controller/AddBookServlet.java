@@ -12,11 +12,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import jakarta.servlet.http.HttpSession;
 import model.bean.Authors;
 import model.bean.Book;
 import model.bean.BookShelf;
 import model.bean.Category;
+import model.bean.User;
 import model.bo.AuthorsBO;
 import model.bo.BookBO;
 import model.bo.BookShelfBO;
@@ -33,30 +34,39 @@ public class AddBookServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String errorString = null;
+       
         List<Category> categoryList = null;
         List<BookShelf> bookShelfList = null;
         List<Authors> authorsList = null;
-
-        try {
-            categoryList = categoryBO.list();
-            bookShelfList = bookshelfBO.getAllBookShelf();
-            authorsList = authorsBO.list();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            errorString = e.getMessage();
-        }
-
-        request.setAttribute("categoryList", categoryList);
-        request.setAttribute("bookShelfList", bookShelfList);
-        request.setAttribute("authorsList", authorsList);
-        request.getSession().setAttribute("Check", "AddBook");
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/add_book.jsp");
-        dispatcher.forward(request, response);
-    }
-
+        String errorString = null;
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("userSession");
+		if (user == null) {
+			errorString = "You need login first!";
+			request.setAttribute("errorString", errorString);
+			RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher("/login.jsp");
+			dispatcher.forward(request, response);
+		} else 
+			{
+		        try {
+		            categoryList = categoryBO.list();
+		            bookShelfList = bookshelfBO.getAllBookShelf();
+		            authorsList = authorsBO.list();
+		
+		        } catch (Exception e) {
+		            e.printStackTrace();
+		            errorString = e.getMessage();
+		        }
+		
+		        request.setAttribute("categoryList", categoryList);
+		        request.setAttribute("bookShelfList", bookShelfList);
+		        request.setAttribute("authorsList", authorsList);
+		        request.getSession().setAttribute("Check", "AddBook");
+		
+		        RequestDispatcher dispatcher = request.getRequestDispatcher("/add_book.jsp");
+		        dispatcher.forward(request, response);
+		    }
+}
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");

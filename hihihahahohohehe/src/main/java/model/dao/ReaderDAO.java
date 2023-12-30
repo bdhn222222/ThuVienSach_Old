@@ -171,7 +171,7 @@ public class ReaderDAO {
 
 	public static void main(String[] args) throws ClassNotFoundException, SQLException {
 		ReaderDAO readerDAO = new ReaderDAO();
-		readerDAO.getAllReader();
+		readerDAO.findReader(1);
 		System.out.println(readerDAO);
 	}
 	

@@ -1,8 +1,5 @@
 package model.controller;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -11,35 +8,36 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.bean.User;
-import model.bo.AuthorsBO;
+import model.bo.BookBO;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import model.bo.TicketBO;
+import model.bean.Ticket;
 
 /**
- * Servlet implementation class DeleteAuthors
+ * Servlet implementation class DeleteTicketServlet
  */
-@WebServlet("/DeleteAuthors")
-public class DeleteAuthorsServlet extends HttpServlet {
+@WebServlet("/DeleteTicket")
+public class DeleteTicketServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private AuthorsBO authorsBO = new AuthorsBO();
+	TicketBO ticketBO = new TicketBO();
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public DeleteTicketServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
 	/**
-	 * @see HttpServlet#HttpServlet()
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	public DeleteAuthorsServlet() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		int idAuthors = Integer.parseInt(request.getParameter("idAuthors"));
-		boolean result;
-		String errorString = null;
+    	String errorString = null;
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("userSession");
 		if (user == null) {
@@ -48,8 +46,11 @@ public class DeleteAuthorsServlet extends HttpServlet {
 			RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher("/login.jsp");
 			dispatcher.forward(request, response);
 		} else {
+		String idTicket = request.getParameter("idTicket");
+		boolean result;
 		try {
-			result = authorsBO.deleteAuthors(idAuthors);
+			Integer ticketID = Integer.parseInt(idTicket);
+			result = ticketBO.deleteTicket(ticketID);
 			System.out.println("Ket qua"+result);
 			if (result == true) {
 				request.setAttribute("errorString", "Đã xóa thành công");
@@ -62,18 +63,16 @@ public class DeleteAuthorsServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 
-//		RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher("/ManageAuthors");
+//		RequestDispatchesr dispatcher = request.getServletContext().getRequestDispatcher("/ManageAuthors");
 //		dispatcher.forward(request, response);
-		response.sendRedirect("ManageAuthors");
+		response.sendRedirect("ManageTicket");
 		}
 }
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}

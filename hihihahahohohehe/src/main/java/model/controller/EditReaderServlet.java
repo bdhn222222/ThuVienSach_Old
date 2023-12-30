@@ -3,13 +3,15 @@ package model.controller;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import jakarta.servlet.http.HttpSession;
 import model.bean.Reader;
+import model.bean.User;
 import model.bo.ReaderBO;
 
 @WebServlet("/EditReader")
@@ -18,7 +20,17 @@ public class EditReaderServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String idReaderStr = request.getParameter("idReader");
+    	String errorString = null;
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("userSession");
+		if (user == null) {
+			errorString = "You need login first!";
+			request.setAttribute("errorString", errorString);
+			RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher("/login.jsp");
+			dispatcher.forward(request, response);
+		} else {
+			String idReaderStr = request.getParameter("idReader");
+			System.out.print(idReaderStr);
 
         if (idReaderStr != null && !idReaderStr.isEmpty()) {
             try {
@@ -40,7 +52,7 @@ public class EditReaderServlet extends HttpServlet {
             response.getWriter().println("Invalid reader ID!");
         }
     }
-
+}
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");

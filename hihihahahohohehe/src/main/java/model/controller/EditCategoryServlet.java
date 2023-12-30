@@ -3,13 +3,15 @@ package model.controller;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import jakarta.servlet.http.HttpSession;
 import model.bean.Category;
+import model.bean.User;
 import model.bo.CategoryBO;
 
 @WebServlet("/EditCategory")
@@ -18,6 +20,15 @@ public class EditCategoryServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+    	String errorString = null;
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("userSession");
+		if (user == null) {
+			errorString = "You need login first!";
+			request.setAttribute("errorString", errorString);
+			RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher("/login.jsp");
+			dispatcher.forward(request, response);
+		} else {
         String idCategoryStr = request.getParameter("idCategory");
         
         if (idCategoryStr != null && !idCategoryStr.isEmpty()) {
@@ -40,7 +51,7 @@ public class EditCategoryServlet extends HttpServlet {
             response.getWriter().println("Invalid category ID!");
         }
     }
-
+    }
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
